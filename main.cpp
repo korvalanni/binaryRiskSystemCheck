@@ -13,9 +13,10 @@ using namespace std;
 random_device rd;
 mt19937 gen(rd());
 
-uniform_real_distribution<double> dist(0, 1.0);
 
 const int n = MAX_SIZE;
+uniform_real_distribution<double> dist(0, 1.0 / n);
+
 vector<double> binary_values((1 << MAX_SIZE));
 
 void get_risk_system_solution(bool generate = 1) {
@@ -27,18 +28,18 @@ void get_risk_system_solution(bool generate = 1) {
             binary_values[val] = dist(gen);
         }
     }
-    else {
-        cin>>binary_values[0];
-        binary_values[0] = 0.5;
-        for (int i = 0; i < n; i++) {
-            ui val = (1 << i);
-            binary_values[val] = double(i + 1) / 10;
-        }
-    }
+//    else {
+//        cin >> binary_values[0];
+//        binary_values[0] = 0.5;
+//        for (int i = 0; i < n; i++) {
+//            ui val = (1 << i);
+//            binary_values[val] = double(i + 1) / 10;
+//        }
+//    }
 
     // Calculate others
     for (int i = 0; i < (1 << n); ++i) {
-        bitset<MAX_SIZE>b = i;
+        bitset<MAX_SIZE> b = i;
         int cnt = b.count();
         if (cnt > 1) {
             binary_values[i] = -(cnt - 1) * binary_values[0];
@@ -51,7 +52,7 @@ void get_risk_system_solution(bool generate = 1) {
     }
 }
 
-void fetch_subword(set<string>& subword, string s) {
+void fetch_subword(set<string> &subword, string s) {
     if (subword.count(s)) {
         return;
     }
@@ -65,10 +66,10 @@ void fetch_subword(set<string>& subword, string s) {
     }
 }
 
-double masks_sum(string& pattern, int q) {
+double masks_sum(string &pattern, int q) {
     double res = 0;
 
-    vector<int>positions;
+    vector<int> positions;
     for (int i = 0; i < pattern.size(); ++i) {
         if (pattern[i] == '?')
             positions.emplace_back(i);
@@ -99,13 +100,14 @@ double calc_word(string word) {
     }
     double msum = masks_sum(word, q);
     res = pow(-1, q - 1) * 1.0 / double(1 << q) * msum;
-    cout << "Final result " << pow(-1, q - 1) * 1.0 << " * " << "1/" << (1 << q) << " * " << msum << " = " << res << "\n\n";
+    cout << "Final result " << pow(-1, q - 1) * 1.0 << " * " << "1/" << (1 << q) << " * " << msum << " = " << res
+         << "\n\n";
     return res;
 }
 
-double accomulate_subword(set<string>& subword) {
+double accomulate_subword(set<string> &subword) {
     double res = 0;
-    for (auto word : subword) {
+    for (auto word: subword) {
         res += calc_word(word);
     }
     return res;
@@ -117,12 +119,12 @@ int main() {
     cout.precision(6);
 
     for (int i = 0; i < (1 << n); ++i) {
-        bitset<MAX_SIZE>bv(i);
+        bitset<MAX_SIZE> bv(i);
         cout << "x[" << i << "] = " << binary_values[i] << '\n';
     }
 
     for (ui mask = 0; mask < pow(3, MAX_SIZE); ++mask) {
-        set<string>sub_word;
+        set<string> sub_word;
         ui cur = mask, unknown = 0;
         string word;
         while (cur) {
