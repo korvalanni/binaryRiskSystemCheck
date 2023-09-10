@@ -13,7 +13,7 @@ RUN apt update && \
 COPY . .
 
 # Создаем директорию для сборки и переходим в нее
-RUN mkdir build
+RUN mkdir -p build
 WORKDIR /usr/src/app/build
 
 # Запускаем процесс сборки
