@@ -4,11 +4,20 @@ FROM gcc:latest
 # Устанавливаем рабочую директорию
 WORKDIR /usr/src/app
 
+# Устанавливаем необходимые инструменты
+RUN apt update && \
+    apt install -y cmake && \
+    rm -rf /var/lib/apt/lists/*
+
 # Копируем исходный код в контейнер
-COPY ./src /usr/src/app
+COPY . .
 
-# Компилируем программу
-RUN g++ -o app main.cpp
+# Создаем директорию для сборки и переходим в нее
+RUN mkdir build
+WORKDIR /usr/src/app/build
 
-# Запускаем программу
-CMD ["./app"]
+# Запускаем процесс сборки
+RUN cmake .. && make
+
+# Устанавливаем команду для запуска приложения
+CMD ["./your_executable_name"]
