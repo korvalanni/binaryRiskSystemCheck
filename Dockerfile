@@ -17,6 +17,7 @@ RUN mkdir -p build
 WORKDIR /usr/src/app/build
 
 # Запускаем процесс сборки
+RUN rm -rf * 
 RUN cmake .. && make
 
 # Устанавливаем команду для запуска приложения
